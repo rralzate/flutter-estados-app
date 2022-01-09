@@ -5,5 +5,5 @@ class Usuario {
 
   List<String> profesiones = [];
 
-  Usuario({nombre, edad, profesiones});
+  Usuario({required nombre, edad, profesiones}) : assert(nombre != null);
 }
