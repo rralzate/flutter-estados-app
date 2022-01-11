@@ -1,9 +1,9 @@
 class Usuario {
-  String nombre = '';
+  String? nombre;
 
-  int edad = 0;
+  int? edad;
 
-  List<String> profesiones = [];
+  List<String>? profesiones;
 
-  Usuario({nombre, edad, profesiones});
+  Usuario({required this.nombre, this.edad, required this.profesiones});
 }

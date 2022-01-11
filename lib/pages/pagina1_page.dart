@@ -1,27 +1,44 @@
-import 'dart:ui';
-
+import 'package:estados_app/models/usuario.dart';
+import 'package:estados_app/pages/controllers/usuario_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Pagina1Page extends StatelessWidget {
   const Pagina1Page({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final usuarioCtrl = Get.put(UsuarioController());
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Pagina 1'),
       ),
-      body: InformacionUsuario(),
+      body: Obx(() => usuarioCtrl.existeUsuario.value
+          ? InformacionUsuario(usuario: usuarioCtrl.usuario.value)
+          : NoInfo()),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.accessibility_new),
-          onPressed: () => Navigator.pushNamed(context, 'pagina2')),
+          onPressed: () => Get.toNamed('pagina2',
+              arguments: {'nombre': 'Ricardo', 'edad': 35})),
+    );
+  }
+}
+
+class NoInfo extends StatelessWidget {
+  const NoInfo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text('No hay usuario seleccionado')),
     );
   }
 }
 
 class InformacionUsuario extends StatelessWidget {
-  const InformacionUsuario({
-    Key? key,
-  }) : super(key: key);
+  const InformacionUsuario({Key? key, required this.usuario}) : super(key: key);
+
+  final Usuario usuario;
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +53,19 @@ class InformacionUsuario extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Divider(),
           ListTile(
-            title: Text('Nombre:'),
+            title: Text('Nombre: ${usuario.nombre}'),
           ),
           ListTile(
-            title: Text('Edad:'),
+            title: Text('Edad: ${usuario.edad}'),
           ),
           Text('Profesiones',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Divider(),
-          ListTile(
-            title: Text('Profesion 1:'),
-          ),
-          ListTile(
-            title: Text('Profesion 2:'),
-          ),
+          ...usuario.profesiones!.map(
+            (profesion) => ListTile(
+              title: Text(profesion),
+            ),
+          )
         ],
       ),
     );
